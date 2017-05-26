@@ -3,10 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
 \usepackage[titlepage,fancysections,pagenumber]{polytechnique}
-\usepackage{amsfonts}
-\usepackage{amsmath}
-\usepackage{graphicx}
-
+\usepackage{amsfonts} \usepackage{amsmath} \usepackage{graphicx} 
 
 \newcommand{\p}{\mathbb{P}}
 \title{Rapport de projet python MAP311}
@@ -70,5 +67,18 @@
 		\end{enumerate}
 
 \section*{Simulations}
+	\begin{enumerate}
+		\item On observe des différences dans la distribution des points. On voir que dans le premier cas, la densité des points augmente au fur et à mesure que l'on se rapproche du centre. En effet, on comprend intuitivement que l'on a autant de chances qu'un point se retrouve dans une bande comprise entre les rayons $r$ et $r + dr$ quel que soit r, mais que la surface de cette bande croît avec r, ainsi, la densité est plus élevée en moyenne quand $r$ tend vers $0$ les deux méthodes suivantes semblent donner des points répartis uniformément sur le disque.
+		Afin de séparer ces deux dernières méthodes, on prendra donc la plus efficace. Une mesure du temps de calcul de ces trois méthodes sur une génération de 600 points avec 600 répétitions donne le résultat suivant : 
+		\begin{verbatim}T1 = 0.24763862291971842 ms (std.dev. 0.0098647314503971)
+T2 = 0.8399013678232828 ms (std.dev. 0.07227058109796747)
+T3 = 0.4730105400085449 ms (std.dev. 0.023126789901638765)
+\end{verbatim}
+	On remarque que la troisième méthode est significativement plus rapide que la seconde, et constitue ainsi le candidat qui réalise à la fois les contraintes indispensables (répartition uniforme des points sur le cercle) et qui minimise le temps de calcul. Nous retenons donc cette méthode de tirage afin de réaliser les essais ultérieurs.
+
+	De plus, la première méthode est plus rapide que la troisième seulement car elle n'effectue pas la projection des coordonnées polaires générées en coordonnées cartésiennes, une fois cette conversion effectuée, les méthodes un et trois retrouvent un temps de calcul comparable, ce qui met encore plus en valeur le choix précédement exprimé.
+
+
+	\end{enumerate}
 \end{document}
 
