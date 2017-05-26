@@ -99,3 +99,14 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# LaTex
+.pdf
+.aux
+.log
+.dvi
+.ps
+
+
+# Vim
+.un~
