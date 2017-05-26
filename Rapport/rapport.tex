@@ -1,0 +1,36 @@
+\documentclass[a4paper,12pt,twoside]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[titlepage,fancysections,pagenumber]{polytechnique}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+
+
+\newcommand{\p}{\mathbb{P}}
+\title{Rapport de projet python MAP311}
+\subtitle{Enveloppes convexes aléatoires}
+\author{David Cheikhi et Arthur Toussaint}
+
+\begin{document}
+
+\maketitle
+
+\section*{Réponses}
+	\begin{enumerate}
+		\item Je sais pas trop si la réponse attendue est une réponse intuitive ou une vraie démonstration de probas
+		\item Idem, je sais pas si simplement dire "P extremal" implique "P est l'un des sommets du polygone" suffit pour conclure ou si il faut pas prouver d'une manière ou d'une autre rigoureusement cette implication
+		\item \begin{eqnarray}
+			\p(C_n) &=& \int_0^1{\p(C_n | R = r) \p(r\leq R \leq r + dr)} \\
+				&=& \int_0^1{\p(P_1 \not\subset S_p \cap \ldots \cap P_{n-1} \not\subset S_p)\p(r\leq R \leq r + dr)} \\
+				&=& \int_0^1{\p(P_1 \not\subset S_p) \ldots \p(P_{n-1} \not\subset S_p)\p(r\leq R \leq r + dr)} \\
+				&=& \int_0^1{\p(P_1 \not\subset S_p)^{n-1}\p(r\leq R \leq r + dr)} \\
+				&=& \int_0^1{(1 - \p(P_1 \subset S_p))^{n-1}\p(r\leq R \leq r + dr)} \\
+				&=& \int_0^1{\left( 1 - \frac{g(r)}{\pi}\right) ^{n-1}\p(r\leq R \leq r + dr)} \\
+		\end{eqnarray}
+		à mon sens la probabilité que $R$ soit entre $r$ et $r + dr$ est de $2\pi r$ du coup je comprend pas trop la deuxieme partie du résultat...
+		\item \includegraphics[width=0.5\textwidth]{Q4_schema.png}
+		\end{enumerate}
+
+\end{document}
+
