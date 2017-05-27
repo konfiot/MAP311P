@@ -107,6 +107,13 @@ ENV/
 *.dvi
 *.ps
 
+# Données
+*.csv
+*.ods
+
 
 # Vim
 *.un~
+
+# Temp
+*.swp
