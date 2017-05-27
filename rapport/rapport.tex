@@ -4,6 +4,7 @@
 \usepackage[french]{babel}
 \usepackage[titlepage,fancysections,pagenumber]{polytechnique}
 \usepackage{amsfonts} \usepackage{amsmath} \usepackage{graphicx} 
+\usepackage{pgf}
 
 \newcommand{\p}{\mathbb{P}}
 \title{Rapport de projet python MAP311}
@@ -14,7 +15,8 @@
 
 \maketitle
 
-\section*{Partie théorique}
+\section{Des polygones engendrés par l'enveloppe convexe de $n$ points aléatoires}
+\section{Une borne théorique inférieure}
 	\begin{enumerate}
 		\item Je sais pas trop si la réponse attendue est une réponse intuitive ou une vraie démonstration de probas
 		\item Idem, je sais pas si simplement dire "P extremal" implique "P est l'un des sommets du polygone" suffit pour conclure ou si il faut pas prouver d'une manière ou d'une autre rigoureusement cette implication
@@ -47,11 +49,11 @@
 					&=& \int^{\sqrt{2s - s^2}}_{-\sqrt{2s - s^2}}{(s + \sqrt{1-x^2} - 1) dx}
 			\end{eqnarray}
 
-		\item on a $$\sqrt{1 - x^2} = 1 - \frac{x^2/2} + o(x^2)$$
+		\item on a $$\sqrt{1 - x^2} = 1 - \frac{x^2}{2} + o(x^2)$$
 		donc
 		\begin{eqnarray}
 			h(s)	&=& \int^{\sqrt{2s - s^2}}_{-\sqrt{2s - s^2}}{(s - \frac{x^2}{2} + o(x^2)) dx} \\
-				&=& 2s^{3/2}\sqrt{2-s} - \frac{1}{3}(2s - s^2)^{3/2} + o(2s-s^2)^3/2 \\\text{Vrai car $ \lim_{x \to 0} 2s - s^2 = 0$}\\ % TODO : Rajouter que c'est vrai car x tend vers 0 quand 2s^2 - s^2 tend vers 0
+				&=& 2s^{3/2}\sqrt{2-s} - \frac{1}{3}(2s - s^2)^{3/2} + o(2s-s^2)^3 \\\text{Vrai car $ \lim_{x \to 0} 2s - s^2 = 0$}\\ % TODO : Rajouter que c'est vrai car x tend vers 0 quand 2s^2 - s^2 tend vers 0
 				&\sim& s^{3/2} (2\sqrt{2-s} - \frac{1}{3}(2 - s)^{3/2}) \\
 				&\sim& s^{3/2} (2\sqrt{2} - \frac{1}{3}\sqrt{8}) \\
 				&\sim& s^{3/2} \sqrt{2}(2 - \frac{1}{3}\sqrt{4}) \\
@@ -66,9 +68,9 @@
 
 		\end{enumerate}
 
-\section*{Simulations}
-	\begin{enumerate}
-		\item On observe des différences dans la distribution des points. On voir que dans le premier cas, la densité des points augmente au fur et à mesure que l'on se rapproche du centre. En effet, on comprend intuitivement que l'on a autant de chances qu'un point se retrouve dans une bande comprise entre les rayons $r$ et $r + dr$ quel que soit r, mais que la surface de cette bande croît avec r, ainsi, la densité est plus élevée en moyenne quand $r$ tend vers $0$ les deux méthodes suivantes semblent donner des points répartis uniformément sur le disque.
+\section{Simulations}
+	\subsection{Tirer des points au hasard dans le disque unité}
+		On observe des différences dans la distribution des points. On voir que dans le premier cas, la densité des points augmente au fur et à mesure que l'on se rapproche du centre. En effet, on comprend intuitivement que l'on a autant de chances qu'un point se retrouve dans une bande comprise entre les rayons $r$ et $r + dr$ quel que soit r, mais que la surface de cette bande croît avec r, ainsi, la densité est plus élevée en moyenne quand $r$ tend vers $0$ les deux méthodes suivantes semblent donner des points répartis uniformément sur le disque.
 		Afin de séparer ces deux dernières méthodes, on prendra donc la plus efficace. Une mesure du temps de calcul de ces trois méthodes sur une génération de 600 points avec 600 répétitions donne le résultat suivant : 
 		\begin{verbatim}T1 = 0.24763862291971842 ms (std.dev. 0.0098647314503971)
 T2 = 0.8399013678232828 ms (std.dev. 0.07227058109796747)
@@ -78,7 +80,11 @@ T3 = 0.4730105400085449 ms (std.dev. 0.023126789901638765)
 
 	De plus, la première méthode est plus rapide que la troisième seulement car elle n'effectue pas la projection des coordonnées polaires générées en coordonnées cartésiennes, une fois cette conversion effectuée, les méthodes un et trois retrouvent un temps de calcul comparable, ce qui met encore plus en valeur le choix précédement exprimé.
 
+	\subsection{Trouver l'enveloppe convexe de $n$ points}
 
-	\end{enumerate}
+		
+
+
+\input{fig_exp.pgf}
 \end{document}
 
