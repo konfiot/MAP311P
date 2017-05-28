@@ -19,7 +19,7 @@
 \section{Une borne théorique inférieure}
 	\begin{enumerate}
 		\item Je sais pas trop si la réponse attendue est une réponse intuitive ou une vraie démonstration de probas
-		\item Idem, je sais pas si simplement dire "P extremal" implique "P est l'un des sommets du polygone" suffit pour conclure ou si il faut pas prouver d'une manière ou d'une autre rigoureusement cette implication
+		\item \label{extr} Idem, je sais pas si simplement dire "P extremal" implique "P est l'un des sommets du polygone" suffit pour conclure ou si il faut pas prouver d'une manière ou d'une autre rigoureusement cette implication
 		\item \begin{eqnarray}
 			\p(C_n) &=& \int_0^1{\p(C_n | R = r) \p(r\leq R \leq r + dr)} \\
 				&=& \int_0^1{\p(P_1 \not\subset S_p \cap \ldots \cap P_{n-1} \not\subset S_p)\p(r\leq R \leq r + dr)} \\
@@ -71,20 +71,40 @@
 \section{Simulations}
 	\subsection{Tirer des points au hasard dans le disque unité}
 		On observe des différences dans la distribution des points. On voir que dans le premier cas, la densité des points augmente au fur et à mesure que l'on se rapproche du centre. En effet, on comprend intuitivement que l'on a autant de chances qu'un point se retrouve dans une bande comprise entre les rayons $r$ et $r + dr$ quel que soit r, mais que la surface de cette bande croît avec r, ainsi, la densité est plus élevée en moyenne quand $r$ tend vers $0$ les deux méthodes suivantes semblent donner des points répartis uniformément sur le disque.
-		Afin de séparer ces deux dernières méthodes, on prendra donc la plus efficace. Une mesure du temps de calcul de ces trois méthodes sur une génération de 600 points avec 600 répétitions donne le résultat suivant : 
+		Afin de séparer ces deux dernières méthodes, on prendra donc la plus efficace. Une mesure du temps de calcul de ces trois méthodes sur une génération de 600 points avec 600 répétitions donne le résultat suivant (fichier gen.py) : 
 		\begin{verbatim}T1 = 0.24763862291971842 ms (std.dev. 0.0098647314503971)
 T2 = 0.8399013678232828 ms (std.dev. 0.07227058109796747)
 T3 = 0.4730105400085449 ms (std.dev. 0.023126789901638765)
 \end{verbatim}
-	On remarque que la troisième méthode est significativement plus rapide que la seconde, et constitue ainsi le candidat qui réalise à la fois les contraintes indispensables (répartition uniforme des points sur le cercle) et qui minimise le temps de calcul. Nous retenons donc cette méthode de tirage afin de réaliser les essais ultérieurs.
+		On remarque que la troisième méthode est significativement plus rapide que la seconde, et constitue ainsi le candidat qui réalise à la fois les contraintes indispensables (répartition uniforme des points sur le cercle) et qui minimise le temps de calcul. Nous retenons donc cette méthode de tirage afin de réaliser les essais ultérieurs.
 
-	De plus, la première méthode est plus rapide que la troisième seulement car elle n'effectue pas la projection des coordonnées polaires générées en coordonnées cartésiennes, une fois cette conversion effectuée, les méthodes un et trois retrouvent un temps de calcul comparable, ce qui met encore plus en valeur le choix précédement exprimé.
+		De plus, la première méthode est plus rapide que la troisième seulement car elle n'effectue pas la projection des coordonnées polaires générées en coordonnées cartésiennes, une fois cette conversion effectuée, les méthodes un et trois retrouvent un temps de calcul comparable, ce qui met encore plus en valeur le choix précédement exprimé.
 
 	\subsection{Trouver l'enveloppe convexe de $n$ points}
 
-		
+		L'idée de cet algorithme est de partir d'un point extremal, qu'on sait appartenir à l'enveloppe convexe (question \ref{extr}), puis de tourner autour de la figure, le fait de tourner dans le même sens garantira la convexité de l'enveloppe. on parcourera les points en partant du point le plus a gauche et en parcourant les points dans le sens trigonométrique par rapport au point d'origine lors de ce parcours, on ajoutera les points au fur et à mesure dans la pile qui définira l'enveloppe convexe, si un point effectue un virage à droite, on éliminera un a un les points de la pile jusqu'à ce que le virage entre le nouveau point et le haut de la pile se fasse à gauche. les points éliminés entre le haut de la pile et le point en cours de considération étant contenus dans l'enveloppe engendrée par les points contenus dans la pile et les points encore non considérés.  
+
+		On a donc un invariant de boucle qui est : "Tous les points sont contenus dans l'enveloppe engendrée par l'union des points présents dans la pile avec les points encore non considérés, et l'enveloppe engendrée par les points présents sur la pile est convexe" 
+
+		Ainsi, après avoir parcouru tous les points, il ne reste plus aucun point encore non considéré, l'invariant de boucle devient donc à la fin du parcours, "Tous les points sont contenus dans l'enveloppe engendrée par les points sur la pile, et cette enveloppe est convexe" ce qui correspond bien au résultat attendu
+
+		Nous venons de décrire de façon intuitive l'algoritheme qui permettra de résoudre notre problème, mais il reste encore à définir plus rigoureusement ce que signifie "Tourner a gauche/droite" et "Effectuer un parcours dans le sens trigonométrique"
+
+		Commençons par définir "Effectuer un parcours dans le sens trigonométrique". Pour cela, il nous faut trier les points selon un critère précis. D'un point de vue algorithmique, cette opération prendra $O(n\ln n)$ opération, en supposant que l'opération de comparaison prend un temps constant, ce que nous vérifierons par la suite. Le choix des mots suggère ici de calculer un angle pour chaque point, et de comparer les angles de chaque point. Une première idée est d'associer a chaque point des coordonnées $(x, y)$ le complexe $z = x + iy$ et de calculer pour chacun de ces points la différence entre l'argument du complexe associé à ce point et l'argument du complexe associé au point extrémal choisi au début. Cette valeur marche dans la plupart des cas, mais ne fonctionne pas dans le cas ou l'origine ne se trouve pas à l'intérieur de l'ensemble des points tirés (Ce qui est un évènement de probabilité exponentiellement décroissante). On pourrait alors considérer de calculer en premier lieu le barycentre de l'ensemble de ces points et de prendre ce barycentre comme origine.
+
+		Il existe néanmoins une méthode plus élégante qui ne nécessite pas de calculer un tel point (Calcul de complexité $O(n)$ qui ne rallonge pas asymptotiquement le temps d'execution de l'algorithme mais qui constitue un cout évitable). On va trier les points selon la pente que forme la droite passant par le point extremal et ce point. Afin d'éviter d'avoir des valeurs infinies, on utilisera la fonction atan2(x,y) qui calcule l'arctangente de $\frac{x}{y}$ et renvoie $\pm \frac{\pi}{2}$ si $y = 0$, selon le signe de $x$, et nous permet donc de classer même les points à la verticale du point extremal
+
+		Afin de définir "Tourner à droite" et "Tourner à gauche", on peut reformuler le problèmes en termes marins, on veut savoir si le 
+
+		Il est alors pertinent de se demander si un tel algorithme peut être généralisé en dimension plus grande, quand les points tirés ne sont pas dans le plan, mais dans l'espace, l'hyperespace, ou dans un espace de dimension n.
 
 
-\input{fig_exp.pgf}
+
+	\subsection{Le vif du sujet}
+		Afin d'estimer $\varepsilon_n$, on effectue pour chaque $n$ plusieurs tirages (On à choisi ici 100 qui constitue un bon compromis entre qualité des résultats et vitesse de calcul), on calcule l'enveloppe convexe de ce tirage et on retient la moyenne du nombre de sommet de l'enveloppe convexe comme valeur estimée de $\varepsilon_n$
+
+		L'implémentation d'un tel estimateur (fichier main.py) permet de tracer le graphe suivant, ainsi que de calculer la courbe de la forme $kn^{1/3}$ qui approche au mieux les données expérimentales.
+
+		\input{fig_exp.pgf}
 \end{document}
 
