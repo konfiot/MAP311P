@@ -5,6 +5,7 @@ import math
 import time
 import statistics
 import matplotlib.pyplot as plt
+import cmath
 
 
 def gen1(n):
@@ -33,6 +34,28 @@ def gen3(n):
 		r = random.random()
 		t = 2*math.pi*random.random()
 		out.append((math.sqrt(r)*math.cos(t), math.sqrt(r)*math.sin(t)))
+	return out
+
+def genppoly(k, n):
+	if k < 3:
+		return False
+
+	out = []
+	for i in range(n):
+		i = random.randint(0, k-1)
+
+		l, m = random.random(), random.random()
+		rand = l + m*cmath.exp(2j*math.pi/k)
+
+		if l + m > 1:
+			rand = -rand + 1 + cmath.exp(2j*math.pi/k)
+
+		
+
+		rand *= cmath.exp(2j*math.pi*i/k)
+
+		out.append((rand.real, rand.imag))
+
 	return out
 
 def test():
@@ -81,7 +104,20 @@ def test():
 	plt.figure(3)
 	plt.scatter(*zip(*r), marker=".")
 
-	plt.show()
+	T = []
+	r = []
+	for i in range(N):
+		t = time.time()
+		r = genppoly(5, N)
+		T.append(time.time() - t)
+	print("T4 = " + str(statistics.mean(T) * 1000) + " ms (std.dev. " + str(statistics.stdev(T)*1000) + ")")
 
+
+	#for (x, y) in r:
+	#	print(str(x) + "," + str(y))
+	plt.figure(4)
+	plt.scatter(*zip(*r), marker=".")
+
+	plt.show()
 if __name__ == "__main__":
 	test()
