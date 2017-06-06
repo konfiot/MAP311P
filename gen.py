@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 import random
 import math
-import time
-import statistics
-import matplotlib.pyplot as plt
 import cmath
 
 
@@ -120,4 +117,8 @@ def test():
 
 	plt.show()
 if __name__ == "__main__":
+	import time
+	import statistics
+	import matplotlib.pyplot as plt
+
 	test()
