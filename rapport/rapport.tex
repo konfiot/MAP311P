@@ -5,6 +5,10 @@
 \usepackage[titlepage,fancysections,pagenumber]{polytechnique}
 \usepackage{amsfonts} \usepackage{amsmath} \usepackage{graphicx} 
 \usepackage{pgf}
+\usepackage{pgf,tikz}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+\usetikzlibrary[patterns]
 
 \newcommand{\p}{\mathbb{P}}
 \title{Rapport de projet python MAP311}
@@ -33,8 +37,38 @@
 				&=& \int_0^1{\left( 1 - \frac{g(r)}{\pi}\right) ^{n-1}\frac{2\pi r dr}{\pi}} \\
 				&=& \int_0^1{\left( 1 - \frac{g(r)}{\pi}\right) ^{n-1}2 r dr} \\
 		\end{eqnarray}
-		\item %\includegraphics[width=0.5\textwidth]{Q4_schema.png}
-			On cherche tout d'abord les bornes de l'intervalle d'integration.
+		\item
+			\begin{figure}
+			\centering
+			\caption{Schéma Q4}
+			\label{fig:q4}
+			\definecolor{ffqqqq}{rgb}{1.,0.,0.}
+			\definecolor{qqttff}{rgb}{0.,0.2,1.}
+			\definecolor{uququq}{rgb}{0.25098039215686274,0.25098039215686274,0.25098039215686274}
+			\begin{tikzpicture}[line cap=round,line join=round,>=triangle 45,x=5.0cm,y=5.0cm]
+			\clip(-1.2,-1.2) rectangle (1.2,1.2);
+			\fill[line width=0.pt,color=ffqqqq,fill=ffqqqq,pattern=north east lines,pattern color=ffqqqq] (-0.4358898943540673,0.) -- (-0.4358898943540673,0.9) -- (0.43588989435406733,0.9) -- (0.43588989435406733,0.) -- cycle;
+			\draw [line width=0.8pt] (0.,0.) circle (5.cm);
+			\draw [line width=0.8pt,dash pattern=on 2pt off 2pt] (-0.4358898943540673,0.9)-- (0.43588989435406733,0.9);
+			\draw [line width=0.8pt,domain=-1.2:1.2] plot(\x,{(-0.-0.*\x)/1.});
+			\draw [line width=0.8pt,dash pattern=on 2pt off 2pt] (-0.4358898943540673,0.)-- (-0.4358898943540673,0.9);
+			\draw [line width=0.8pt,dash pattern=on 2pt off 2pt] (0.43588989435406733,0.9)-- (0.43588989435406733,0.);
+			\draw [shift={(0.,0.)},line width=0.8pt,color=qqttff,fill=qqttff,pattern=north east lines,pattern color=qqttff]  plot[domain=1.1197695149986342:2.0218231385911594,variable=\t]({1.*1.*cos(\t r)+0.*1.*sin(\t r)},{0.*1.*cos(\t r)+1.*1.*sin(\t r)}) -- cycle ;
+			\begin{scriptsize}
+			\draw [fill=uququq] (-0.4358898943540673,0.9) circle (1.5pt);
+			\draw[color=uququq] (-0.4117690554175289,0.9488112808172411) node {$C$};
+			\draw [fill=uququq] (0.43588989435406733,0.9) circle (1.5pt);
+			\draw[color=uququq] (0.4585375073878903,0.9488112808172411) node {$D$};
+			\draw [fill=uququq] (-0.4358898943540673,0.) circle (1.5pt);
+			\draw[color=uququq] (-0.4117690554175289,0.04826240501858345) node {$E$};
+			\draw [fill=uququq] (0.43588989435406733,0.) circle (1.5pt);
+			\draw[color=uququq] (0.4585375073878903,0.04826240501858345) node {$F$};
+			\draw[color=qqttff] (-0.04046065700054505,1.0916222032853118) node {$S_p$};
+			\draw[color=ffqqqq] (0.01666371198668324,0.49013620041979045) node {$S_b$};
+			\end{scriptsize}
+			\end{tikzpicture}
+			\end{figure}
+			On cherche tout d'abord les bornes de l'intervalle d'integration. On utilise pour cela la Figure \ref{fig:q4}
 
 			Pour trouver l'aire voulue, on doit integrer entre $x_c$ et $x_d$, ces points sont les points d'intersection entre la droite d'équation $y = r = 1 - s$ et le cercle d'équation $x^2 + y^2 = 1$
 			$$ \sqrt{1 - x^2} = y = 1 - s $$ donc 
@@ -98,7 +132,7 @@ T3 = 0.4730105400085449 ms (std.dev. 0.023126789901638765)
 
 		Il existe néanmoins une méthode plus élégante qui ne nécessite pas de calculer un tel point (Calcul de complexité $O(n)$ qui ne rallonge pas asymptotiquement le temps d'execution de l'algorithme mais qui constitue un cout évitable). On va trier les points selon la pente que forme la droite passant par le point extremal et ce point. Afin d'éviter d'avoir des valeurs infinies, on utilisera la fonction atan2(x,y) qui calcule l'arctangente de $\frac{x}{y}$ et renvoie $\pm \frac{\pi}{2}$ si $y = 0$, selon le signe de $x$, et nous permet donc de classer même les points à la verticale du point extremal
 
-		Afin de définir "Tourner à droite" et "Tourner à gauche", on peut reformuler le problèmes en termes marins, on veut savoir si le 
+		Afin de définir "Tourner à droite" et "Tourner à gauche", on peut reformuler le problèmes en termes marins, on veut savoir si le point C est à babord ou a tribord du bateau modélisé par le vecteur AB, pour cela, on utilise le déterminan de ces trois vecteurs, dont le signe discrimine ces deux états.
 
 		Il est alors pertinent de se demander si un tel algorithme peut être généralisé en dimension plus grande, quand les points tirés ne sont pas dans le plan, mais dans l'espace, l'hyperespace, ou dans un espace de dimension n.
 
@@ -107,8 +141,40 @@ T3 = 0.4730105400085449 ms (std.dev. 0.023126789901638765)
 	\subsection{Le vif du sujet}
 		Afin d'estimer $\varepsilon_n$, on effectue pour chaque $n$ plusieurs tirages (On à choisi ici 100 qui constitue un bon compromis entre qualité des résultats et vitesse de calcul), on calcule l'enveloppe convexe de ce tirage et on retient la moyenne du nombre de sommet de l'enveloppe convexe comme valeur estimée de $\varepsilon_n$
 
-		L'implémentation d'un tel estimateur (fichier main.py) permet de tracer le graphe suivant, ainsi que de calculer la courbe de la forme $kn^{1/3}$ qui approche au mieux les données expérimentales.
+		L'implémentation d'un tel estimateur (fichier main.py) permet de tracer le graphe Figure~\ref{fig:exp_cercle}, ainsi que de calculer la courbe de la forme $kn^{1/3}$ qui approche au mieux les données expérimentales.
 
-		\input{fig_exp.pgf}
+		\begin{figure}[htpb]
+			\centering
+			\input{fig_exp_cercle.pgf}
+			\caption{Données expérimentales}
+			\label{fig:exp_cercle}
+		\end{figure}
+
+		On peut alors se demander, comme le sujet le suggère, comment varie cette loi quand on tire ces points non plus dans un disque, mais dans un polygone régulier.
+		Pour effectuer cette expérience, on garde l'algorithme de graham, mais on modifie le générateur de nombre aléatoires. Pour pouvoir tirer des points uniformément dans un polygone, on procède de la manière suivante : On tire aléatoirement une "tranche" $i$, c'est à dire un nombre entre $0$ et $k-1$ ou $k$ représente le nombre de sommets du polygone régulier choisi, puis on génère un nombre qui se trouvera dans le triangle composé de l'origine, du point d'affixe $e^{2ij\pi/k}$ et du point d'affixe $e^{2i(j+1)\pi/k}$
+		Pour générer un point dans ce triangle, on génère un point dans le parallélogramme associé à ce triangle, puis on prend calcule ses coordonnées dans le triangle dans lequel ce point se trouve. 
+		On trace alors le graphe Figure~\ref{fig:exp_poly}, et calculer la constante qui va miniser la somme des résidus quadratiques. (L'exemple utilise un pentagone)
+
+		\begin{figure}[htpb]
+			\centering
+			\input{fig_exp_poly.pgf}
+			\caption{Données expérimentales}
+			\label{fig:exp_poly}
+		\end{figure}
+
+		On peut ensuite se demander comment varie la constante $c$ en fonction du nombre de sommets du polygone considéré. Intuitivement, on peut alors penser qu'en faisant tendre le nombre de points vers l'infini, notre polygone va converger uniformément vers un cercle, et qu'ainsi, on devrait retrouver asymptotiquement le comportement que l'on à avec un cercle. Cette convergence implique aussi une forme de stabilisation de $c$, car les contributions en aire apportés par les polygones de plus grand nombre de sommets deviennent de plus en plus petites.
+
+		En calculant des regressions permettant d'estimer $c$ pour différents polygones, en tirant toujours le même nombre de points ($1000$), on trace le graphe Figure~\ref{fig:exp_c}
+
+		\begin{figure}[htpb]
+			\centering
+			\input{fig_exp_c.pgf}
+			\caption{Estimation de $c$}
+			\label{fig:exp_c}
+		\end{figure}
+
+		On trouve bien que $c$ tend vers une valeur constante.
+
+
 \end{document}
 

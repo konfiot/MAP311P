@@ -13,7 +13,7 @@ def f(x, k):
 
 out = []
 for i in range(10, 1000):
-	out.append(statistics.mean([len(graham.graham(gen.genppoly(5, i))) for k in range(10)]))
+	out.append(statistics.mean([len(graham.graham(gen.genppoly(5, i))) for k in range(100)]))
 
 plt.xlabel("$n$")
 plt.ylabel("$\epsilon_n$")
