@@ -11,6 +11,8 @@
 \usetikzlibrary[patterns]
 
 \newcommand{\p}{\mathbb{P}}
+\newcommand{\e}{\mathbb{E}}
+
 \title{Rapport de projet python MAP311}
 \subtitle{Enveloppes convexes aléatoires}
 \author{David Cheikhi et Arthur Toussaint}
@@ -22,7 +24,7 @@
 \section{Des polygones engendrés par l'enveloppe convexe de $n$ points aléatoires}
 \section{Une borne théorique inférieure}
 	\begin{enumerate}
-		\item Je sais pas trop si la réponse attendue est une réponse intuitive ou une vraie démonstration de probas
+		\item On note $X_{n,i}$ la variable aléatoire qui vaut $1$ ssi $P_{i}$ appartient à l'enveloppe convexe de $\{P,P_1,...,P_{n-1}\}$. La famille des $(X_{n,i})_i$ est une famille de variable i.i.d. suivant une loi de Bernoulli de paramètre $\p(B_n)$. De plus  $\mathcal{E} _n = \e(\sum_{i=0}^{i=n-1} X_{n,i}) = n\e(X_{n,0}) = n\p(B_n) $
 		\item \label{extr} Si P est extrémal, alors P est nécessairement un des sommets du polygone, on a donc $C_n \subset B_n$ ce qui implique que $\p(B_n) \geq \p(C_n)$
 		\item En introduisant $S(r)$ l'aire du cercle de rayon $r$, on à
 		\begin{eqnarray}
@@ -102,8 +104,45 @@
 
 		\item Dans ce cas, on a bien $\left(1 - \frac{h(s)}{\pi}\right)^{n-1}$ qui tend vers $e^{-\frac{K}{\pi}u^{3/2}}$
 
-		De plus, on a bient $2(1-s) \sim 2n^{-2/3}$
+		De plus, on a bien $2(1-s) \sim 2n^{-2/3}$
 
+		\item On a 
+		\begin{eqnarray}
+			\p(C_n) &=& 2\int_0^1 \left( 1-\frac{h(s)}{\pi} \right)^{n-1}(1-s)ds \\
+				&=& 2n^{-2/3}\int_0^{n^{2/3}} \left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}(1-\frac{u}{n^{2/3}})du
+		\end{eqnarray}
+		Montrons que $$\p(C_n) \geq n^{-2/3}\int_0^{n^{2/3}} \left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}du $$ ce qui conclura puisque l'intégrande est positive et $n^{2/3} \geq 1$. 
+		
+		On considère donc la quantité
+		\begin{eqnarray}
+		R_n	&=& \p(C_n) - n^{-2/3}\int_0^{n^{2/3}} \left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}du \\
+			&=& n^{-2/3}\int_0^{n^{2/3}} \left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}(1-2\frac{u}{n^{2/3}})du 
+		\end{eqnarray}
+		dont on souhaite montrer qu'elle est positive.\\	
+		$$R_n = n^{-2/3}\left[\int_0^{\frac{n^{2/3}}{2}} \left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}(1-\frac{2u}{n^{2/3}})du +  \\
+		  \int_{\frac{n^{2/3}}{2}}^{n^{2/3}} -\left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}(\frac{2u}{n^{2/3}}-1)du \right]$$
+		  
+	Or sur $[0;n^{2/3}/2]$, on a $u \rightarrow \left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}$ qui croit et $(1-\frac{2u}{n^{2/3}})\geq 0$. De même, sur $[n^{2/3}/2;n^{2/3}]$, on a $u \rightarrow -\left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}$ qui décroît et $(\frac{2u}{n^{2/3}}-1)\geq 0$
+		  
+		 Donc $$R_n \geq n^{-2/3}\left(1-\frac{h(\frac{1}{2})}{\pi}\right)^{n-1}\left[\int_0^{\frac{n^{2/3}}{2}} 1-\frac{2u}{n^{2/3}}du - 		
+		  \int_{\frac{n^{2/3}}{2}}^{n^{2/3}}\frac{2u}{n^{2/3}}-1du \right]$$
+			
+$$R_n \geq n^{-2/3}\left(1-\frac{h(\frac{1}{2})}{\pi}\right)^{n-1}\left[\int_0^{n^{2/3}} 1-\frac{2u}{n^{2/3}}du \right] $$
+
+Or $$\int_0^{n^{2/3}} 1-\frac{2u}{n^{2/3}}du  = 0$$
+
+Donc $R_n \geq 0$  ce qui assure que $$\p(C_n) \geq n^{-2/3}\int_0^{n^{2/3}} \left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}du $$ ce qui implique bien $$\p(C_n) \geq n^{-2/3}\int_0^{1} \left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}du $$
+
+
+De plus, pour tout $u \in [0;1]$, $un^{-2/3} \rightarrow 0$ lorsque $n \rightarrow +\infty$.
+Or $K(s) \sim Ks^{3/2}$ quand $s \rightarrow 0$ donc $h(un^{-2/3}) \rightarrow 0$ lorsque $n \rightarrow +\infty$. Ainsi $(n-1)\log(1-\frac{h(un^{-2/3}}{\pi}) \sim -(n-1)\frac{h(un^{-2/3})}{\pi} \sim -\frac{K(n-1)u^{3/2}}{n\pi}\sim -\frac{K}{\pi}u^{3/2}$
+
+
+On a donc $\left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1} \rightarrow \exp^{-(K/\pi) u^{3/2}}$. De plus la fonction $ u \rightarrow \left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}$ est dominée par $1$ sur le compact $[0;1]$. Le théorème de convergence dominée assure donc que $\int_0^{1} \left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}du$ converge vers $\int_0^{1} \exp^{-(K/\pi) u^{3/2}}du$
+
+	\item On a donc $\int_0^{1} \left(1-\frac{h(un^{-2/3})}{\pi}\right)^{n-1}du = \int_0^{1} \exp^{-(K/\pi) u^{3/2}}du +o(1)$.
+	
+	Ainsi, $\p(C_n) >= (\int_0^{1} \exp^{-(K/\pi) u^{3/2}}du +o(1))n^{2/3}$
 		\end{enumerate}
 
 \section{Simulations}
